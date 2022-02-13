@@ -3,7 +3,6 @@ const EfreiICO = artifacts.require("EfreiICO");
 const {
     expect
 } = require('chai');
-const BigNumber = web3.BigNumber;
 
 contract('EfreiICO', accounts => {
     const [initialHolder, recipient, anotherAccount] = accounts;
@@ -28,20 +27,22 @@ contract('EfreiICO', accounts => {
         await this.token.start();
     });
 
-    describe('efreiToken attributes', function () {
-        it('has the correct name', async function () {
-            expect(await efreiToken.name()).to.equal(_name);
-        })
-
-        it('has the correct symbol', async function () {
-            expect(await efreiToken.symbol()).to.equal(_symbol);
-        })
-    })
-
-    describe('total supply', function () {
-        it('returns the total amount of tokens', async function () {
-          expect(await efreiToken.totalSupply()).to.be.bignumber.equal(_initialSupply);
+    describe('balanceOf', function () {
+        describe('when the requested account has no tokens', function () {
+            it('returns zero', async function () {
+                const expected = web3.utils.toBN('0');
+                const actual = await efreiToken.balanceOf(anotherAccount);
+                expect(actual).to.eql(expected);
+            });
         });
-      });
-    
+
+        describe('when the requested account has some tokens', function () {
+            it('returns the total amount of tokens', async function () {
+                const expected = web3.utils.toBN(_initialSupply);
+                const actual = await efreiToken.balanceOf(initialHolder);
+                expect(actual).to.eql(expected);
+            });
+        });
+    });
+
 });
