@@ -45,4 +45,12 @@ contract('EfreiICO', accounts => {
         });
     });
 
+    describe('buy', function () {
+        it('buy it', async function () {
+            const expected = web3.utils.toBN(_initialSupply);
+            const actual = await efreiToken.balanceOf(initialHolder);
+            expect(actual).to.eql(expected);
+        });
+    });
+
 });
